@@ -111,6 +111,18 @@ class Rating {
       throw error;
     }
   }
+
+  // Delete ratings associate with user
+  static async delete(userId) {
+    try {
+      const query = "DELETE FROM ratings WHERE user_id = $1";
+      const values = [userId];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = Rating;

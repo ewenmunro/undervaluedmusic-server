@@ -5,6 +5,9 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Mentions = require("../models/Mentions");
+const Rating = require("../models/Rating");
+const ListenClicks = require("../models/ListenClicks");
 const config = require("../config");
 const authMiddleware = require("../middleware/authMiddleware");
 const cron = require("node-cron");
@@ -231,6 +234,31 @@ router.put("/profile/:userId", authMiddleware, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to update user profile" });
+  }
+});
+
+// Delete user account
+router.delete("/delete", authMiddleware, async (req, res) => {
+  try {
+    // Get the user ID from the authenticated user
+    const userId = req.user.user_id;
+
+    // Delete associated mentions
+    await Mentions.delete(userId);
+
+    // Delete associated ratings
+    await Rating.delete(userId);
+
+    // Delete associated watch link clicks (if applicable)
+    await ListenClicks.delete(userId);
+
+    // Finally, delete the user account from the database
+    await User.delete(userId);
+
+    res.status(200).json({ message: "User account deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete user account" });
   }
 });
 

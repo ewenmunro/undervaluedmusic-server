@@ -98,9 +98,25 @@ async function updateUserProfile(req, res) {
   }
 }
 
+// Delete user account
+async function deleteUserAccount(req, res) {
+  try {
+    const { userId } = req.params;
+
+    // Delete the user account
+    await User.delete(userId);
+
+    res.status(200).json({ message: "User account deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete user account" });
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
   updateUserProfile,
+  deleteUserAccount,
 };

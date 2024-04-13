@@ -295,6 +295,21 @@ const User = {
       throw error;
     }
   },
+
+  // Delete user by user ID
+  delete: async (userId) => {
+    try {
+      const query = `
+            DELETE FROM users
+            WHERE user_id = $1;
+          `;
+      const values = [userId];
+      await db.query(query, values);
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+      throw error;
+    }
+  },
 };
 
 module.exports = User;

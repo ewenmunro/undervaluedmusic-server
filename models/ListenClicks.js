@@ -8,6 +8,18 @@ const ListenClicks = {
       [user_id, music_id]
     );
   },
+
+  // Delete watch link clicks associate with user
+  delete: async (userId) => {
+    try {
+      const query = "DELETE FROM listen_clicks WHERE user_id = $1";
+      const values = [userId];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = ListenClicks;
